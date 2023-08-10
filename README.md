@@ -16,4 +16,4 @@ ${question.code}
 refer [gen_question_list.sh](./gen_question_list.sh)
 
 
-## [question list](./question_list)
+## [question list](./question_list.md)
