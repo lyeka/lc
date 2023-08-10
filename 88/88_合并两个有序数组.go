@@ -1,6 +1,6 @@
 package mergeSortedArray
 
-//[doc](../doc/content/88/88_合并两个有序数组.md)
+// [doc](./doc/content/88/88_合并两个有序数组.md)
 //leetcode submit region begin(Prohibit modification and deletion)
 func merge(nums1 []int, m int, nums2 []int, n int) {
 	sorted := make([]int, 0, m+n)
