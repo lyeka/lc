@@ -1,19 +1,6 @@
+## 题目索引
 
-## config
-### leetcode-editor
-code filename
-```
-${question.frontendQuestionId}/$!{question.frontendQuestionId}_$!velocityTool.smallCamelCaseName(${question.title})
-```
-code template
-```
-package $!velocityTool.smallCamelCaseName(${question.titleSlug})
-
-${question.code}
-```
-
-### auto generate question list
-refer [gen_question_list.sh](./gen_question_list.sh)
-
-
-## [question list](./question_list.md)
+  - [19_删除链表的倒数第N个结点](doc/content/19/19_删除链表的倒数第N个结点.md)/[Code](19/19_删除链表的倒数第N个结点.go)
+  - [198_打家劫舍](doc/content/198/198_打家劫舍.md)/[Code](198/198_打家劫舍.go)
+  - [70_爬楼梯](doc/content/70/70_爬楼梯.md)/[Code](70/70_爬楼梯.go)
+  - [88_合并两个有序数组](doc/content/88/88_合并两个有序数组.md)/[Code](88/88_合并两个有序数组.go)
