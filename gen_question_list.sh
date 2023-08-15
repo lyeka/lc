@@ -2,7 +2,7 @@
 
 # 指定目录和Markdown文件名
 target_directory="doc/content"
-markdown_file="question_list.md"
+markdown_file="README.md"
 
 # 清空已存在的Markdown文件内容
 > "$markdown_file"
