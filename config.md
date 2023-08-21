@@ -3,8 +3,7 @@
 ### leetcode-editor
 code filename
 ```
-${question.frontendQuestionId}/$!{question.frontendQuestionId}_$!velocityTool.smallCamelCaseName(${question.title})
-```
+$!velocityTool.leftPadZeros(${question.frontendQuestionId},4)/$!velocityTool.leftPadZeros($!{question.frontendQuestionId},4)_$!velocityTool.smallCamelCaseName(${question.title})```
 code template
 ```
 package $!velocityTool.smallCamelCaseName(${question.titleSlug})
