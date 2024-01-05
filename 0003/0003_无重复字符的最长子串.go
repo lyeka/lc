@@ -2,14 +2,24 @@ package longestSubstringWithoutRepeatingCharacters
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func lengthOfLongestSubstring(s string) int {
-	var m [128]int
-	//m := make([]int, 128)
-	i := 0
-	res := 0
-	for j := 0; j < len(s); j++ {
-		i = max(i, m[s[j]])
-		m[s[j]] = j + 1
-		res = max(res, j-i+1)
+	if len(s) == 0 {
+		return 0
+	}
+	m := make([]int, 128)
+	start, end := 0, 1
+	m[s[0]] = 1
+	res := 1
+	for end < len(s) {
+		if m[s[end]] != 1 {
+			m[s[end]] = 1
+			res = max(res, end-start+1)
+			end++
+		} else {
+			m[s[start]] = 0
+			start++
+
+		}
+
 	}
 
 	return res
