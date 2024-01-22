@@ -1,0 +1,34 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func getMinimumDifference(root *TreeNode) int {
+	pre, ans := -1, math.MaxInt
+	var dfs  func(node *TreeNode)
+	dfs = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		dfs(node.Left)
+		if pre != -1 {
+			if node.Val - pre < ans {
+				ans = node.Val - pre
+			}
+		}
+
+		pre = node.Val
+
+		dfs(node.Right)
+	}
+	dfs(root)
+	return ans
+
+}
+
+
+//runtime:10 ms
+//memory:6.5 MB
