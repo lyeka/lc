@@ -1,0 +1,96 @@
+type LRUCache struct {
+	Data map[int]*Node
+	Head *Node
+	len  int
+	cap  int
+}
+
+type Node struct {
+	Key       int
+	Value     int
+	Prev, Next *Node
+}
+
+func NewNode(key, value int) *Node {
+	return &Node{
+		Key:   key,
+		Value: value,
+	}
+}
+
+func Constructor(capacity int) LRUCache {
+	data := make(map[int]*Node)
+	l := LRUCache{
+		Data:   data,
+		len:  0,
+		cap:  capacity,
+		Head: NewNode(0, 0),
+	}
+	return l
+}
+
+func (this *LRUCache) Get(key int) int {
+	node, ok := this.Data[key]
+	if !ok {
+		return -1
+	}
+
+	this.moveToHead(node)
+	return node.Value
+}
+
+func (this *LRUCache) Put(key int, value int) {
+	node, ok := this.Data[key]
+	if ok {
+		node.Value = value
+		this.moveToHead(node)
+		return
+	}
+
+	node = NewNode(key, value)
+	this.moveToHead(node)
+	this.Data[key] = node
+	this.len++
+	if this.len > this.cap {
+		tail := this.removeTail()
+		delete(this.Data, tail.Key)
+		this.len--
+	}
+}
+
+func (this *LRUCache) moveToHead(node *Node) {
+	if node.Next != nil {
+		node.Next.Prev = node.Prev
+	}
+	if node.Prev != nil {
+		node.Prev.Next = node.Next
+	}
+
+	node.Next = this.Head.Next
+	node.Prev = this.Head
+	if this.Head.Next != nil {
+		this.Head.Next.Prev = node
+	}
+	this.Head.Next = node
+}
+
+func (this *LRUCache) removeTail() *Node {
+	if this.Head.Next == nil {
+		return nil
+	}
+	node := this.Head.Next
+	for node.Next != nil {
+		node = node.Next
+	}
+	node.Prev.Next = nil
+	return node
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * obj := Constructor(capacity);
+ * param_1 := obj.Get(key);
+ * obj.Put(key,value);
+ */
+//runtime:764 ms
+//memory:74.8 MB
