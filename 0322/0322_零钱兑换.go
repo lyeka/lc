@@ -2,25 +2,25 @@ package coinChange
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func coinChange(coins []int, amount int) int {
-	max := amount + 1
 	dp := make([]int, amount+1)
-	dp[0] = 0
+	max := amount + 1
 	for i := 1; i <= amount; i++ {
 		dp[i] = max
-	}
-
-	for i := 1; i <= amount; i++ {
-		for _, coin := range coins {
-			if i-coin >= 0 {
-				dp[i] = min(dp[i-coin]+1, dp[i])
+		for _, v := range coins {
+			if i-v < 0 {
+				continue
 			}
+			dp[i] = min(dp[i], dp[i-v]+1)
 		}
+
 	}
 
 	if dp[amount] == max {
-		return -1 // 代表无法组合而成
+		return -1
 	}
+
 	return dp[amount]
+
 }
 
 func min(x, y int) int {

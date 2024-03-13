@@ -1,0 +1,76 @@
+> Problem: [416. 分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/description/)
+
+[TOC]
+
+# 思路
+
+> 自己看第一眼没思路
+> 我看的时候，只看出来是把这个数组正好分成两个数组，两个数组的值，相等。
+> 但是这个是 “图像上的” 我应该继续把他转换成数学上的。 两边都相等，两半，这个值是什么值，不就是 原数组和的一半吗？
+> 所以以后遇到问题 应该在脑袋里有这个图形后，要进一步转换成数学语言
+> 就是得多个层面去思考。
+> 逻辑上是什么，变量在数学上的意义。
+
+# 解题方法
+
+> 看了一下背包问题是什么
+> 然后看了官方题解的 这两段，自己有思路，自己写代码
+> 创建二维数组 dp\textit{dp}dp，包含 nnn 行 target+1\textit{target}+1target+1 列，其中 dp[i][j]\textit{dp}[i][j]dp[i][j] 表示从数组的 [0,i][0,i][0,i] 下标范围内选取若干个正整数（可以是 000 个），是否存在一种选取方案使得被选取的正整数的和等于 jjj。初始时，dp\textit{dp}dp 中的全部元素都是 false\text{false}false。
+> 空间复杂度：O(target)O(\textit{target})O(target)，其中 target\textit{target}target 是整个数组的元素和的一半。空间复杂度取决于 dp\textit{dp}dp 数组，在不进行空间优化的情况下，空间复杂度是 O(n×target)O(n \times \textit{target})O(n×target)，在进行空间优化的情况下，空间复杂度可以降到 O(target)O(\textit{target})O(target)。
+
+作者：力扣官方题解
+链接：https://leetcode.cn/problems/partition-equal-subset-sum/solutions/442320/fen-ge-deng-he-zi-ji-by-leetcode-solution/
+来源：力扣（LeetCode）
+
+# Code
+
+* []
+
+```C++
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int target = 0;
+        for(int it:nums){
+            target += it;
+        }
+        if(target % 2 == 1){
+            return false;
+        }
+        target /= 2; // nums 所有的元素和的 一半
+        bool dp[target + 1];
+        bool dp1[target + 1];
+        for(int i = 0; i < target + 1; i++){
+            dp[i] = false;
+            dp1[i] = false;
+        }
+        int n = nums.size(); // 数组nums的长度
+        for(int i = 0; i < n; i++){
+            for(int j = 1; j < target + 1; j++){
+                if(dp[j]){// 如果不算当前元素，前面的可以，那么算当前元素也一定可以。
+                    dp1[j] = true;
+                    continue;
+                }
+                if(nums[i] == j){ // 如果当前物品重量等于容量，说明算上这个物品以后，肯定能正好装满
+                    dp1[j] = true;
+                }else if(nums[i] < j){ 
+// 当前物品重量小于容量，则，假设把这个物品装进去了，看是否能正好装满。 
+// 容量-当前物品容量,就是假设当前物品装进去后容量.
+// 然后只用看dp[假设当前物品装进去的容量]是否满足能被正好装满，就是当前这个容量，算上这个物品能不能刚好被装满
+                    dp1[j] = dp[j - nums[i]];
+                }else{
+                    dp1[j] = dp[j];
+                }
+            }
+            for(int x = 1; x < target + 1; x++){
+                dp[x] = dp1[x];
+            }
+        }
+        // for(int i = 1; i < target + 1; i++){
+        //     cout << dp1[i];
+        // }
+        return dp1[target];
+    }
+};
+```
+

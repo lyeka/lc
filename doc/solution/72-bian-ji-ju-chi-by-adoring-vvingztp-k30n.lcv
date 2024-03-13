@@ -1,0 +1,79 @@
+> Problem: [72. 编辑距离](https://leetcode.cn/problems/edit-distance/description/)
+
+[TOC]
+
+# 思路
+
+> 讲述看到这一题的思路
+> 自己想没想出来，看了一眼题解，说到 状态转换方程， 这个东西，就有思路了。
+> 得出： 写动态规划， 先用最优子结构，重叠子问题，判断能不能用动态规划，能用动态规划的话，就去找状态转换方程，想想怎么存动态规划用的数据，怎么转换。
+
+# 解题方法
+
+> dp[i][j]表示word1直到第i个,和word2直到第j个,他们的编辑距离
+> 比如word1="abcd",word2="efgh" dp[2][3]表示"ab" 与 "efg" 的编辑距离
+
+> 状态转换方程： 如果 word1[i-1],word2[j-1]相等(下标是长度减1)
+> 那么 dp[i][j] = dp[i-1][j-1];
+> 不相等 则 dp[i][j] = min(dp[i][j-1],dp[i-1][j],dp[i][j]) + 1;
+> min(a,b,c)表示a,b,c里面最小的一个。dp[i][j-1]+1,dp[i-1][j]+1,dp[i][j]+1
+> 对应 对dp[i][j-1],dp[i-1][j],dp[i][j]进行 增;删;改。
+
+# 复杂度
+
+时间复杂度:
+
+> $O(n * m)$ n,m表示两字符串长度
+
+空间复杂度:
+
+> $O(n)$ 其中一个字符串长度， 因为发现动态规划只用dp[m][n]中一行或一列就可以求出下一行或者一列。 所以优化空间，用一行或者一列来存数据就ok了
+
+# Code
+
+* []
+
+```C++
+class Solution 
+{
+public:
+    int minDistance(string word1, string word2) 
+    {
+        int m = word1.size(); // 字符串word1的长度
+        int n = word2.size(); // 字符串word2的长度
+        if(n == 0)
+        {
+            return m;
+        }
+        int dp[m + 1]; // 用来存储动态规划的数据
+        int temp[m + 1]; // 用来上一行存储动态规划的数据
+        for(int j = 0; j <= m; j++)
+        {
+            temp[j] = j;
+        } // 初始化 temp
+        dp[0] = 0; // 初始化dp
+        for(int i = 0; i < n; i++) // i代表word2的下标
+        {
+            dp[0]++;
+            for(int j = 1; j <= m; j++) // j代表直到word1中第几个字符，dp[0]表示第0个字符，也就是空字符
+            {
+                if(word1[j-1] == word2[i])
+                {
+                    dp[j] = temp[j-1];
+                }
+                else
+                {
+                    dp[j] = std::min(temp[j],std::min(dp[j-1],temp[j-1])) + 1;
+                }
+            } // 通过temp 求出新的 dp 结束
+            temp[0]++;
+            for(int j = 1; j <= m; j++)
+            {
+                temp[j] = dp[j];
+            } // 更新temp
+        }
+        return dp[m];
+    }
+};
+```
+

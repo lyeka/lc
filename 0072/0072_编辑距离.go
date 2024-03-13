@@ -1,6 +1,11 @@
 package editDistance
 
 //leetcode submit region begin(Prohibit modification and deletion)
+// 1. if word[i] == word[j]: dp[i][j] = dp[i-1][j-1]
+// 2. if word[j] != word[j]: dp[i][j] = min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]) + 1
+// 2.a: dp[i-1][j-1] 表示替换操作
+// 2.b: dp[i-1][j] 表示删除操作
+// 2.c: dp[i][j-1] 表示插入操作
 func minDistance(word1 string, word2 string) int {
 	dp := make([][]int, len(word1)+1)
 	for i := 0; i <= len(word1); i++ {
@@ -8,7 +13,7 @@ func minDistance(word1 string, word2 string) int {
 		dp[i][0] = i
 	}
 
-	for i := 0; i <= len(word2); i++ {
+	for i := 1; i <= len(word2); i++ {
 		dp[0][i] = i
 	}
 
@@ -25,16 +30,17 @@ func minDistance(word1 string, word2 string) int {
 	return dp[len(word1)][len(word2)]
 }
 
-func min(x, y int) int {
-	if x < y {
-		return x
+func min3(x, y, z int) int {
+	m := x
+	if m > y {
+		m = y
 	}
 
-	return y
-}
+	if m > z {
+		m = z
+	}
 
-func min3(x, y, z int) int {
-	return min(min(x, y), z)
+	return m
 }
 
 //leetcode submit region end(Prohibit modification and deletion)

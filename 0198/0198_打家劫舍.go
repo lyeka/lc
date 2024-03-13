@@ -2,14 +2,17 @@ package houseRobber
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func rob(nums []int) int {
-	p, q, r := 0, 0, 0
-	for i := 0; i < len(nums); i++ {
-		p = q
-		q = r
-		r = max(p+nums[i], q)
+	if len(nums) == 0 {
+		return 0
+	}
+	dp := make([]int, len(nums)+1)
+	dp[1] = nums[0]
+	for i := 2; i <= len(nums); i++ {
+		dp[i] = max(dp[i-1], dp[i-2]+nums[i-1])
+
 	}
 
-	return r
+	return dp[len(nums)]
 }
 
 func max(x, y int) int {
