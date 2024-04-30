@@ -2,32 +2,25 @@ package trappingRainWater
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func trap(height []int) int {
+	ans := 0
 	left, right, leftMax, rightMax := 0, len(height)-1, height[0], height[len(height)-1]
-	res := 0
 	for left < right {
-		leftMax = max(height[left], leftMax)
-		rightMax = max(height[right], rightMax)
+		leftMax = max(leftMax, height[left])
+		rightMax = max(rightMax, height[right])
 		if height[left] < height[right] {
-			res += leftMax - height[left]
+			ans += leftMax - height[left]
 			left++
 		} else {
-			res += rightMax - height[right]
+			ans += rightMax - height[right]
 			right--
 		}
 	}
 
-	return res
+	return ans
 }
 
 func max(x, y int) int {
 	if x > y {
-		return x
-	}
-	return y
-}
-
-func min(x, y int) int {
-	if x < y {
 		return x
 	}
 	return y

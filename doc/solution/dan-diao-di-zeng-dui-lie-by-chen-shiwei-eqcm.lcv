@@ -1,0 +1,40 @@
+### 解题思路
+
+此处撰写解题思路
+
+### 代码
+
+* golang
+
+```golang
+func maxSlidingWindow(nums []int, k int) []int {
+    l:=len(nums)
+
+    var q []int
+    var result []int
+    push := func(x int){
+        for len(q) != 0 && x > q[len(q)-1] {
+            q = q[:len(q)-1]
+        }
+        q = append(q,x)
+    }
+    pop := func(x int){
+        if x == q[0] && len(q) != 0 {
+            q = q[1:]
+        }
+    }
+
+    for i:=0; i< k;i++{
+        push(nums[i])
+    }
+    result = append(result,q[0])
+    for i:=k;i<l;i++{
+        pop(nums[i-k])
+        push(nums[i])
+        result = append(result,q[0])
+    }
+
+    return result
+}
+```
+

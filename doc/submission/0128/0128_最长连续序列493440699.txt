@@ -1,0 +1,28 @@
+func longestConsecutive(nums []int) int {
+	numSet := map[int]bool{}
+	for _, num := range nums {
+		numSet[num] = true
+	}
+
+	longest := 0
+	for num, _ := range numSet {
+		if !numSet[num-1] {
+			cnt := 1
+			tn := num
+			for numSet[tn+1] {
+				cnt++
+				tn++
+			}
+			if cnt > longest {
+				longest = cnt
+			}
+		}
+	}
+
+	return longest
+
+}
+
+
+//runtime:100 ms
+//memory:13.2 MB

@@ -24,9 +24,27 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 
 	newHead := reverse(a, b)
 	a.Next = reverseKGroup(b, k)
-
 	return newHead
+}
 
+func reverseKGroupV2(head *ListNode, k int) *ListNode {
+	dummyHead := &ListNode{
+		al:   0,
+		Next: head,
+	}
+
+	a, b := head, head
+
+	for {
+		for i := 0; i < k; i++ {
+			if b == nil {
+				break
+			}
+			b = b.Next
+		}
+	}
+
+	return dummyHead.Next
 }
 
 func reverse(head, tail *ListNode) *ListNode {
@@ -40,7 +58,6 @@ func reverse(head, tail *ListNode) *ListNode {
 	}
 
 	return pre
-
 }
 
 //leetcode submit region end(Prohibit modification and deletion)

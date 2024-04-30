@@ -2,28 +2,28 @@ package longestConsecutiveSequence
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func longestConsecutive(nums []int) int {
-	numSet := map[int]bool{}
+	numSet := make(map[int]bool, len(nums))
 	for _, num := range nums {
 		numSet[num] = true
 	}
 
-	longest := 0
+	max := 0
 	for num, _ := range numSet {
 		if !numSet[num-1] {
 			cnt := 1
-			tn := num
-			for numSet[tn+1] {
+			n := num
+			for numSet[n+1] {
 				cnt++
-				tn++
+				n++
 			}
-			if cnt > longest {
-				longest = cnt
+
+			if cnt > max {
+				max = cnt
 			}
 		}
 	}
 
-	return longest
-
+	return max
 }
 
 //leetcode submit region end(Prohibit modification and deletion)

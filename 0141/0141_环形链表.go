@@ -7,6 +7,9 @@ type ListNode struct {
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func hasCycle(head *ListNode) bool {
+	if head == nil {
+		return false
+	}
 	slow, fast := head, head
 	for fast != nil && fast.Next != nil {
 		slow = slow.Next
@@ -14,6 +17,7 @@ func hasCycle(head *ListNode) bool {
 		if slow == fast {
 			return true
 		}
+
 	}
 
 	return false

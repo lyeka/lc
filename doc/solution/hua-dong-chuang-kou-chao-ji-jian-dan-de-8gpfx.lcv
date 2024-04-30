@@ -1,0 +1,65 @@
+# 类比“消消乐”“祖玛”
+
+* []
+
+```Java
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> ans = new ArrayList<>();
+        int n = s.length();
+        int m = p.length();
+        if (n < m) return ans;
+        Map<Character, Integer> dir = new HashMap<>();
+
+        int record = m;
+
+        // 把p的字符放入Map中
+        for (int i = 0; i < m; i++) {
+            char c = p.charAt(i);
+            dir.put(c, dir.getOrDefault(c, 0) + 1);
+        }
+
+        // 初始化指针
+        for (int i = 0; i < m; i++) {
+            char c = s.charAt(i);
+            if (dir.containsKey(c)) {
+                int value = dir.get(c);
+                dir.put(c, value - 1);
+                if (value > 0) record--;
+            }
+        }
+        if (record == 0) ans.add(0);
+
+        // 开始滑动
+        for (int i = 1; i - 1 + m < n; i++) {
+            char c1 = s.charAt(i - 1);
+            char c2 = s.charAt(i - 1 + m);
+
+            //  丢掉前一个
+            if (dir.containsKey(c1)) {
+                int value = dir.get(c1);
+                dir.put(c1, value + 1);
+                if (value >= 0) {
+                    record++;
+                }
+            }
+
+            // 添加后一个
+            boolean flag = false;
+            if (dir.containsKey(c2)) {
+                int value = dir.get(c2);
+                dir.put(c2, value - 1);
+                if (value > 0) {
+                    flag = true;
+                    record--;
+                }
+            }
+
+            if (record == 0 && flag) ans.add(i);
+        }
+
+        return ans;
+    }
+}
+```
+

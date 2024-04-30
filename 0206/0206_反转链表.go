@@ -25,11 +25,9 @@ func reverseList(head *ListNode) *ListNode {
 		cur.Next = pre
 		pre = cur
 		cur = next
-
 	}
 
 	return pre
-
 }
 
 //leetcode submit region end(Prohibit modification and deletion)

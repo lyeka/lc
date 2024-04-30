@@ -6,26 +6,22 @@ import (
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func merge(intervals [][]int) [][]int {
-	if len(intervals) <= 1 {
-		return intervals
-	}
 	sort.Slice(intervals, func(i, j int) bool {
 		return intervals[i][0] < intervals[j][0]
 	})
 
-	merge := [][]int{intervals[0]}
-	mIndex := 0
+	ans := [][]int{intervals[0]}
 
 	for i := 1; i < len(intervals); i++ {
-		if intervals[i][0] > merge[mIndex][1] {
-			merge = append(merge, intervals[i])
-			mIndex++
+		if intervals[i][0] <= ans[len(ans)-1][1] {
+			if intervals[i][1] > ans[len(ans)-1][1] {
+				ans[len(ans)-1][1] = intervals[i][1]
+			}
 		} else {
-			merge[mIndex][1] = max(intervals[i][1], merge[mIndex][1])
+			ans = append(ans, intervals[i])
 		}
 	}
-
-	return merge
+	return ans
 
 }
 

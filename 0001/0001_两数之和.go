@@ -2,13 +2,12 @@ package twoSum
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func twoSum(nums []int, target int) []int {
-	m := map[int]int{}
-	for i, v := range nums {
-		i2, ok := m[target-v]
-		if ok {
-			return []int{i, i2}
+	m := make(map[int]int)
+	for i := 0; i < len(nums); i++ {
+		if index, ok := m[target-nums[i]]; ok {
+			return []int{index, i}
 		}
-		m[v] = i
+		m[nums[i]] = i
 	}
 
 	return nil

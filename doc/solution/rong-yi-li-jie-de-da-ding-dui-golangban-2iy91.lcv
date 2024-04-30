@@ -1,0 +1,85 @@
+### 解题思路
+
+优先队列，大顶堆
+时间复杂度：O(n log(n)) n为数组长度，极端情况下nums为单调递增，堆内元素不会被Pop
+时间复杂度：O(n)
+
+### 代码
+
+* golang
+
+```golang
+import (
+	"container/heap"
+)
+
+func maxSlidingWindow(nums []int, k int) []int {
+	n := len(nums)
+	if n == 0 || k == 0 {
+		return []int{}
+	}
+
+	// 总共会形成n-k+1个窗口，res存放结果集
+	res := make([]int, 0, n-k+1)
+
+	// 1. 先将第一个窗口内的元素初始化入堆
+	q := make(PriorityQueue, 0, k)
+	for i := 0; i < k; i++ {
+		item := pair{index: i, value: nums[i]}
+		q = append(q, item)
+	}
+	heap.Init(&q)
+	// 将第一个窗口最大值存入结果集
+	res = append(res, q.Peek().value)
+	// 2. 遍历元素，依次入堆，并判断堆顶元素是否在当前窗口区间内，当前窗口区间下标：[i-k+1 : i] 前后都是闭区间
+	for i := k; i < n; i++ {
+		item := pair{index: i, value: nums[i]}
+		heap.Push(&q, item)
+		// 他强任他强，不在当前窗口内的即便是最大值也让其滚蛋
+		for q.Peek().index <= i-k {
+			heap.Pop(&q)
+		}
+		res = append(res, q.Peek().value)
+	}
+	return res
+}
+
+// ---------------------------------------------------------------
+// 借助标准库 container/Heap 接口实现大顶堆（优先队列）
+type pair struct {
+	index int // 索引
+	value int // 值
+}
+
+type PriorityQueue []pair
+
+// 实现 sort接口的 Len,Less,Swap 方法
+func (pq PriorityQueue) Len() int      { return len(pq) }
+func (pq PriorityQueue) Swap(i, j int) { pq[i], pq[j] = pq[j], pq[i] }
+
+// value相同时，比较索引
+func (pq PriorityQueue) Less(i, j int) bool {
+	if pq[i].value == pq[j].value {
+		return pq[i].index > pq[j].index
+	}
+	return pq[i].value > pq[j].value
+}
+
+// 实现 container/Heap 的 Push,Pop 方法，注意：receiver是指针
+func (pq *PriorityQueue) Push(x interface{}) {
+	*pq = append(*pq, x.(pair))
+}
+
+func (pq *PriorityQueue) Pop() interface{} {
+	old := *pq
+	n := pq.Len()
+	x := old[n-1]
+	*pq = (*pq)[:n-1]
+	return x
+}
+
+func (pq PriorityQueue) Peek() pair {
+	return pq[0]
+}
+```
+

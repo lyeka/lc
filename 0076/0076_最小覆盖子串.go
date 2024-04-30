@@ -5,40 +5,42 @@ package minimumWindowSubstring
 // 1. 利用 [128]int{} 替代 map
 // 2. 利用 s-'A' 来进一步减少 []int 大小，128->58
 func minWindow(s string, t string) string {
-	//ori, cnt := map[byte]int{}, map[byte]int{}
 	ori, cnt := [58]int{}, [58]int{}
 	for i := 0; i < len(t); i++ {
 		ori[t[i]-'A']++
 	}
 
 	check := func() bool {
-		for k, v := range ori {
-			if cnt[k] < v {
+		for i, v := range ori {
+			if cnt[i] < v {
 				return false
 			}
 		}
+
 		return true
 	}
 
-	length := len(s) + 1
+	l, r := 0, 0
 	ansL, ansR := -1, -1
+	length := len(s) + 1
 
-	for l, r := 0, 0; r < len(s); r++ {
+	for ; r < len(s); r++ {
 		if ori[s[r]-'A'] > 0 {
 			cnt[s[r]-'A']++
 		}
+
 		for check() && l <= r {
-			if (r - l + 1) < length {
+			if r-l+1 < length {
 				length = r - l + 1
 				ansL, ansR = l, r
 			}
 			if cnt[s[l]-'A'] > 0 {
 				cnt[s[l]-'A']--
 			}
-
 			l++
 		}
 	}
+
 	if ansL == -1 {
 		return ""
 	}

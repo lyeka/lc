@@ -14,35 +14,33 @@ type ListNode struct {
  * }
  */
 func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
-	head := &ListNode{}
+	head := new(ListNode)
 	p := head
-
-	for list1 != nil && list2 != nil {
-		if list1.Val < list2.Val {
-			p.Next = &ListNode{
-				Val:  list1.Val,
-				Next: nil,
-			}
-			list1 = list1.Next
+	p1, p2 := list1, list2
+	for p1 != nil && p2 != nil {
+		if p1.Val < p2.Val {
+			p.Next = p1
+			p1 = p1.Next
 		} else {
-			p.Next = &ListNode{
-				Val:  list2.Val,
-				Next: nil,
-			}
-			list2 = list2.Next
+			p.Next = p2
+			p2 = p2.Next
 		}
 		p = p.Next
 	}
 
-	if list1 != nil {
-		p.Next = list1
+	for p1 != nil {
+		p.Next = p1
+		p1 = p1.Next
+		p = p.Next
 	}
 
-	if list2 != nil {
-		p.Next = list2
+	for p2 != nil {
+		p.Next = p2
+		p2 = p2.Next
+		p = p.Next
 	}
-
 	return head.Next
+
 }
 
 //leetcode submit region end(Prohibit modification and deletion)

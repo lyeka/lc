@@ -2,10 +2,13 @@ package containerWithMostWater
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func maxArea(height []int) int {
-	l, r := 0, len(height)-1
-	res := 0
+	l, r, ans := 0, len(height)-1, 0
 	for l < r {
-		res = max(res, (r-l)*min(height[l], height[r]))
+		h := min(height[l], height[r])
+		area := h * (r - l)
+		if area > ans {
+			ans = area
+		}
 		if height[l] < height[r] {
 			l++
 		} else {
@@ -13,7 +16,7 @@ func maxArea(height []int) int {
 		}
 	}
 
-	return res
+	return ans
 }
 
 func max(x, y int) int {

@@ -4,8 +4,9 @@ package rotateArray
 func rotate(nums []int, k int) {
 	reverse(nums)
 	k = k % len(nums)
-	reverse(nums[0:k])
+	reverse(nums[:k])
 	reverse(nums[k:])
+
 }
 
 func reverse(nums []int) {

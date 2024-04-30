@@ -1,0 +1,54 @@
+//package main
+//type ListNode struct {
+//	Val int
+//	Next *ListNode
+//}
+func sortList(head *ListNode) *ListNode {
+	return sort(head, nil)
+}
+
+func sort(head, tail *ListNode) *ListNode {
+	if head == nil {
+		return head
+	}
+
+	if head.Next == tail {
+		head.Next = nil
+		return head
+	}
+
+	slow, fast := head, head
+	for fast != tail && fast.Next != tail {
+		fast = fast.Next.Next
+		slow = slow.Next
+	}
+
+	return merge(sort(head, slow), sort(slow, tail))
+}
+
+func merge(left, right *ListNode) *ListNode {
+	res := new(ListNode)
+	p := res
+	for left != nil && right != nil {
+		if left.Val < right.Val {
+			p.Next = left
+			left = left.Next
+		} else {
+			p.Next = right
+			right = right.Next
+		}
+		p = p.Next
+	}
+
+	if left != nil {
+		p.Next = left
+	}
+	if right != nil {
+		p.Next = right
+	}
+
+	return res.Next
+}
+
+//runtime:36 ms
+//memory:7.1 MB

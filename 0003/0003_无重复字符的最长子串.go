@@ -5,24 +5,24 @@ func lengthOfLongestSubstring(s string) int {
 	if len(s) == 0 {
 		return 0
 	}
+	ans, l, r := 1, 0, 1
+	//m := make(map[byte]bool)
 	m := make([]int, 128)
+	m[s[l]] = 1
 
-	start, end := 0, 1
-	res := 1
-	m[s[start]]++
-	for end < len(s) {
-		if m[s[end]] != 1 {
-			m[s[end]] = 1
-			res = max(res, end-start+1)
-			end++
-		} else {
-			m[s[start]] = 0
-			start++
-
+	for r < len(s) {
+		if m[s[r]] == 1 {
+			m[s[l]] = 0
+			l++
+			continue
 		}
+		m[s[r]] = 1
+		ans = max(ans, r-l+1)
+		r++
 	}
 
-	return res
+	return ans
+
 }
 
 func max(x, y int) int {
