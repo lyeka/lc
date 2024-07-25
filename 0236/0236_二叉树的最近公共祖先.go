@@ -23,8 +23,10 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 	if root.Val == p.Val || root.Val == q.Val {
 		return root
 	}
-	left := lowestCommonAncestor(root.Left, q, p)
-	right := lowestCommonAncestor(root.Right, q, p)
+
+	left := lowestCommonAncestor(root.Left, p, q)
+	right := lowestCommonAncestor(root.Right, p, q)
+
 	if left != nil && right != nil {
 		return root
 	}
@@ -32,9 +34,7 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 	if left != nil {
 		return left
 	}
-
 	return right
-
 }
 
 //leetcode submit region end(Prohibit modification and deletion)

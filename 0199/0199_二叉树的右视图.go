@@ -19,14 +19,12 @@ func rightSideView(root *TreeNode) []int {
 	if root == nil {
 		return nil
 	}
-	res := []int{}
-	l := []*TreeNode{root}
-
-	for len(l) > 0 {
-		last := l[len(l)-1]
-		res = append(res, last.Val)
+	stack := []*TreeNode{root}
+	ans := make([]int, 0)
+	for len(stack) > 0 {
+		ans = append(ans, stack[len(stack)-1].Val)
 		tmp := make([]*TreeNode, 0)
-		for _, node := range l {
+		for _, node := range stack {
 			if node.Left != nil {
 				tmp = append(tmp, node.Left)
 			}
@@ -34,11 +32,10 @@ func rightSideView(root *TreeNode) []int {
 				tmp = append(tmp, node.Right)
 			}
 		}
-		l = tmp
+		stack = tmp
 	}
 
-	return res
-
+	return ans
 }
 
 //leetcode submit region end(Prohibit modification and deletion)

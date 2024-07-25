@@ -1,0 +1,505 @@
+### 📺 视频题解
+
+![LeetCode 200 ZYH.mp4](https://leetcode.cn/problems/number-of-islands/solution/dao-yu-shu-liang-by-leetcode/0a3f7b6f-abd0-4af8-87ef-89c565b967d4)
+
+### 📖 文字题解
+
+#### 方法一：深度优先搜索
+
+我们可以将二维网格看成一个无向图，竖直或水平相邻的 $1$ 之间有边相连。
+
+为了求出岛屿的数量，我们可以扫描整个二维网格。如果一个位置为 $1$，则以其为起始节点开始进行深度优先搜索。在深度优先搜索的过程中，每个搜索到的 $1$ 都会被重新标记为 $0$。
+
+最终岛屿的数量就是我们进行深度优先搜索的次数。
+
+下面的动画展示了整个算法。
+
+<![image.png](https://pic.leetcode-cn.com/5dae0de2a06f4eae5113f9cadfa5c51bbcf0b9347c5861aa73c93d7bc1d50b34-image.png),![image.png](https://pic.leetcode-cn.com/61a98091fe75de107bf886a608e87d5bb29d810b9e7eb1e00c541f49194ea543-image.png),![image.png](https://pic.leetcode-cn.com/6d060f275561dc390841f78d85124fd193efb0801ea2dc865b2767f1093e4f3a-image.png),![image.png](https://pic.leetcode-cn.com/233368eab82832268c3c7266fd7fe65c78626de9fd89cb90b3f36a7b4e52860d-image.png),![image.png](https://pic.leetcode-cn.com/bf055c3d5f6b310f6a110ada65d503de6d7793276f5638731c81c53b4276b835-image.png),![image.png](https://pic.leetcode-cn.com/195ba530a5350e0a8f8e372319d061c85316c1064017d5c00d7cfc2b0c055de6-image.png),![image.png](https://pic.leetcode-cn.com/c21a88bde9450ad83d6164c2df4677b16154fa5990408459a2a45982b9cd70fd-image.png),![image.png](https://pic.leetcode-cn.com/0cfddec2d15ed9a56c434f470ff07eb3dfc83dccbda0160583d1bce469077274-image.png)>
+
+* [sol1-C++]
+
+```C++
+class Solution {
+private:
+    void dfs(vector<vector<char>>& grid, int r, int c) {
+        int nr = grid.size();
+        int nc = grid[0].size();
+
+        grid[r][c] = '0';
+        if (r - 1 >= 0 && grid[r-1][c] == '1') dfs(grid, r - 1, c);
+        if (r + 1 < nr && grid[r+1][c] == '1') dfs(grid, r + 1, c);
+        if (c - 1 >= 0 && grid[r][c-1] == '1') dfs(grid, r, c - 1);
+        if (c + 1 < nc && grid[r][c+1] == '1') dfs(grid, r, c + 1);
+    }
+
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        int nr = grid.size();
+        if (!nr) return 0;
+        int nc = grid[0].size();
+
+        int num_islands = 0;
+        for (int r = 0; r < nr; ++r) {
+            for (int c = 0; c < nc; ++c) {
+                if (grid[r][c] == '1') {
+                    ++num_islands;
+                    dfs(grid, r, c);
+                }
+            }
+        }
+
+        return num_islands;
+    }
+};
+```
+
+* [sol1-Java]
+
+```Java
+class Solution {
+    void dfs(char[][] grid, int r, int c) {
+        int nr = grid.length;
+        int nc = grid[0].length;
+
+        if (r < 0 || c < 0 || r >= nr || c >= nc || grid[r][c] == '0') {
+            return;
+        }
+
+        grid[r][c] = '0';
+        dfs(grid, r - 1, c);
+        dfs(grid, r + 1, c);
+        dfs(grid, r, c - 1);
+        dfs(grid, r, c + 1);
+    }
+
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+
+        int nr = grid.length;
+        int nc = grid[0].length;
+        int num_islands = 0;
+        for (int r = 0; r < nr; ++r) {
+            for (int c = 0; c < nc; ++c) {
+                if (grid[r][c] == '1') {
+                    ++num_islands;
+                    dfs(grid, r, c);
+                }
+            }
+        }
+
+        return num_islands;
+    }
+}
+```
+
+* [sol1-Python3]
+
+```Python
+class Solution:
+    def dfs(self, grid, r, c):
+        grid[r][c] = 0
+        nr, nc = len(grid), len(grid[0])
+        for x, y in [(r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)]:
+            if 0 <= x < nr and 0 <= y < nc and grid[x][y] == "1":
+                self.dfs(grid, x, y)
+
+    def numIslands(self, grid: List[List[str]]) -> int:
+        nr = len(grid)
+        if nr == 0:
+            return 0
+        nc = len(grid[0])
+
+        num_islands = 0
+        for r in range(nr):
+            for c in range(nc):
+                if grid[r][c] == "1":
+                    num_islands += 1
+                    self.dfs(grid, r, c)
+        
+        return num_islands
+```
+
+**复杂度分析**
+
+* 时间复杂度：$O(MN)$，其中 $M$ 和 $N$ 分别为行数和列数。
+
+* 空间复杂度：$O(MN)$，在最坏情况下，整个网格均为陆地，深度优先搜索的深度达到 $M N$。
+
+#### 方法二：广度优先搜索
+
+同样地，我们也可以使用广度优先搜索代替深度优先搜索。
+
+为了求出岛屿的数量，我们可以扫描整个二维网格。如果一个位置为 $1$，则将其加入队列，开始进行广度优先搜索。在广度优先搜索的过程中，每个搜索到的 $1$ 都会被重新标记为 $0$。直到队列为空，搜索结束。
+
+最终岛屿的数量就是我们进行广度优先搜索的次数。
+
+* [sol2-C++]
+
+```C++
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        int nr = grid.size();
+        if (!nr) return 0;
+        int nc = grid[0].size();
+
+        int num_islands = 0;
+        for (int r = 0; r < nr; ++r) {
+            for (int c = 0; c < nc; ++c) {
+                if (grid[r][c] == '1') {
+                    ++num_islands;
+                    grid[r][c] = '0';
+                    queue<pair<int, int>> neighbors;
+                    neighbors.push({r, c});
+                    while (!neighbors.empty()) {
+                        auto rc = neighbors.front();
+                        neighbors.pop();
+                        int row = rc.first, col = rc.second;
+                        if (row - 1 >= 0 && grid[row-1][col] == '1') {
+                            neighbors.push({row-1, col});
+                            grid[row-1][col] = '0';
+                        }
+                        if (row + 1 < nr && grid[row+1][col] == '1') {
+                            neighbors.push({row+1, col});
+                            grid[row+1][col] = '0';
+                        }
+                        if (col - 1 >= 0 && grid[row][col-1] == '1') {
+                            neighbors.push({row, col-1});
+                            grid[row][col-1] = '0';
+                        }
+                        if (col + 1 < nc && grid[row][col+1] == '1') {
+                            neighbors.push({row, col+1});
+                            grid[row][col+1] = '0';
+                        }
+                    }
+                }
+            }
+        }
+
+        return num_islands;
+    }
+};
+```
+
+* [sol2-Java]
+
+```Java
+class Solution {
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+
+        int nr = grid.length;
+        int nc = grid[0].length;
+        int num_islands = 0;
+
+        for (int r = 0; r < nr; ++r) {
+            for (int c = 0; c < nc; ++c) {
+                if (grid[r][c] == '1') {
+                    ++num_islands;
+                    grid[r][c] = '0';
+                    Queue<Integer> neighbors = new LinkedList<>();
+                    neighbors.add(r * nc + c);
+                    while (!neighbors.isEmpty()) {
+                        int id = neighbors.remove();
+                        int row = id / nc;
+                        int col = id % nc;
+                        if (row - 1 >= 0 && grid[row-1][col] == '1') {
+                            neighbors.add((row-1) * nc + col);
+                            grid[row-1][col] = '0';
+                        }
+                        if (row + 1 < nr && grid[row+1][col] == '1') {
+                            neighbors.add((row+1) * nc + col);
+                            grid[row+1][col] = '0';
+                        }
+                        if (col - 1 >= 0 && grid[row][col-1] == '1') {
+                            neighbors.add(row * nc + col-1);
+                            grid[row][col-1] = '0';
+                        }
+                        if (col + 1 < nc && grid[row][col+1] == '1') {
+                            neighbors.add(row * nc + col+1);
+                            grid[row][col+1] = '0';
+                        }
+                    }
+                }
+            }
+        }
+
+        return num_islands;
+    }
+}
+```
+
+* [sol2-Python3]
+
+```Python
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        nr = len(grid)
+        if nr == 0:
+            return 0
+        nc = len(grid[0])
+
+        num_islands = 0
+        for r in range(nr):
+            for c in range(nc):
+                if grid[r][c] == "1":
+                    num_islands += 1
+                    grid[r][c] = "0"
+                    neighbors = collections.deque([(r, c)])
+                    while neighbors:
+                        row, col = neighbors.popleft()
+                        for x, y in [(row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)]:
+                            if 0 <= x < nr and 0 <= y < nc and grid[x][y] == "1":
+                                neighbors.append((x, y))
+                                grid[x][y] = "0"
+        
+        return num_islands
+```
+
+**复杂度分析**
+
+* 时间复杂度：$O(MN)$，其中 $M$ 和 $N$ 分别为行数和列数。
+
+* 空间复杂度：$O(\min(M, N))$，在最坏情况下，整个网格均为陆地，队列的大小可以达到 $\min(M, N)$。
+
+#### 方法三：并查集
+
+同样地，我们也可以使用并查集代替搜索。
+
+为了求出岛屿的数量，我们可以扫描整个二维网格。如果一个位置为 $1$，则将其与相邻四个方向上的 $1$ 在并查集中进行合并。
+
+最终岛屿的数量就是并查集中连通分量的数目。
+
+下面的动画展示了整个算法。
+
+<![image.png](https://pic.leetcode-cn.com/41b6ce1794ba80a7a82b31dc4c0642b26ccd280457d254d2fdad37a1f5a73ca6-image.png),![image.png](https://pic.leetcode-cn.com/82fa6f7b52294fdd8a2f4a0a28d4ca2dd3d71e86e7ddf5fa5ef4b18a13d3c438-image.png),![image.png](https://pic.leetcode-cn.com/773a3ac931ca2b397b0ba6cac17a15a0dd21fe2d0f2887d6b90405d9025c3f85-image.png),![image.png](https://pic.leetcode-cn.com/6c1a18d84a24f74c18654e0f20b17c263646a9fad911e6bb227e665688abb037-image.png),![image.png](https://pic.leetcode-cn.com/1a35068b177ce3ed70de37d3e7a1fb3e91ba0e5588ab3e3633ddb963f3d64f68-image.png),![image.png](https://pic.leetcode-cn.com/6f35cbfc7410e54ec80f96af3123c5eed5e5b8f73e6a1cc2fa4aea0f911e919c-image.png)>
+
+* [sol3-C++]
+
+```C++
+class UnionFind {
+public:
+    UnionFind(vector<vector<char>>& grid) {
+        count = 0;
+        int m = grid.size();
+        int n = grid[0].size();
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == '1') {
+                    parent.push_back(i * n + j);
+                    ++count;
+                }
+                else {
+                    parent.push_back(-1);
+                }
+                rank.push_back(0);
+            }
+        }
+    }
+
+    int find(int i) {
+        if (parent[i] != i) {
+            parent[i] = find(parent[i]);
+        }
+        return parent[i];
+    }
+
+    void unite(int x, int y) {
+        int rootx = find(x);
+        int rooty = find(y);
+        if (rootx != rooty) {
+            if (rank[rootx] < rank[rooty]) {
+                swap(rootx, rooty);
+            }
+            parent[rooty] = rootx;
+            if (rank[rootx] == rank[rooty]) rank[rootx] += 1;
+            --count;
+        }
+    }
+
+    int getCount() const {
+        return count;
+    }
+
+private:
+    vector<int> parent;
+    vector<int> rank;
+    int count;
+};
+
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        int nr = grid.size();
+        if (!nr) return 0;
+        int nc = grid[0].size();
+
+        UnionFind uf(grid);
+        int num_islands = 0;
+        for (int r = 0; r < nr; ++r) {
+            for (int c = 0; c < nc; ++c) {
+                if (grid[r][c] == '1') {
+                    grid[r][c] = '0';
+                    if (r - 1 >= 0 && grid[r-1][c] == '1') uf.unite(r * nc + c, (r-1) * nc + c);
+                    if (r + 1 < nr && grid[r+1][c] == '1') uf.unite(r * nc + c, (r+1) * nc + c);
+                    if (c - 1 >= 0 && grid[r][c-1] == '1') uf.unite(r * nc + c, r * nc + c - 1);
+                    if (c + 1 < nc && grid[r][c+1] == '1') uf.unite(r * nc + c, r * nc + c + 1);
+                }
+            }
+        }
+
+        return uf.getCount();
+    }
+};
+```
+
+* [sol3-Java]
+
+```Java
+class Solution {
+    class UnionFind {
+        int count;
+        int[] parent;
+        int[] rank;
+
+        public UnionFind(char[][] grid) {
+            count = 0;
+            int m = grid.length;
+            int n = grid[0].length;
+            parent = new int[m * n];
+            rank = new int[m * n];
+            for (int i = 0; i < m; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    if (grid[i][j] == '1') {
+                        parent[i * n + j] = i * n + j;
+                        ++count;
+                    }
+                    rank[i * n + j] = 0;
+                }
+            }
+        }
+
+        public int find(int i) {
+            if (parent[i] != i) parent[i] = find(parent[i]);
+            return parent[i];
+        }
+
+        public void union(int x, int y) {
+            int rootx = find(x);
+            int rooty = find(y);
+            if (rootx != rooty) {
+                if (rank[rootx] > rank[rooty]) {
+                    parent[rooty] = rootx;
+                } else if (rank[rootx] < rank[rooty]) {
+                    parent[rootx] = rooty;
+                } else {
+                    parent[rooty] = rootx;
+                    rank[rootx] += 1;
+                }
+                --count;
+            }
+        }
+
+        public int getCount() {
+            return count;
+        }
+    }
+
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+
+        int nr = grid.length;
+        int nc = grid[0].length;
+        int num_islands = 0;
+        UnionFind uf = new UnionFind(grid);
+        for (int r = 0; r < nr; ++r) {
+            for (int c = 0; c < nc; ++c) {
+                if (grid[r][c] == '1') {
+                    grid[r][c] = '0';
+                    if (r - 1 >= 0 && grid[r-1][c] == '1') {
+                        uf.union(r * nc + c, (r-1) * nc + c);
+                    }
+                    if (r + 1 < nr && grid[r+1][c] == '1') {
+                        uf.union(r * nc + c, (r+1) * nc + c);
+                    }
+                    if (c - 1 >= 0 && grid[r][c-1] == '1') {
+                        uf.union(r * nc + c, r * nc + c - 1);
+                    }
+                    if (c + 1 < nc && grid[r][c+1] == '1') {
+                        uf.union(r * nc + c, r * nc + c + 1);
+                    }
+                }
+            }
+        }
+
+        return uf.getCount();
+    }
+}
+```
+
+* [sol3-Python3]
+
+```Python
+class UnionFind:
+    def __init__(self, grid):
+        m, n = len(grid), len(grid[0])
+        self.count = 0
+        self.parent = [-1] * (m * n)
+        self.rank = [0] * (m * n)
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == "1":
+                    self.parent[i * n + j] = i * n + j
+                    self.count += 1
+    
+    def find(self, i):
+        if self.parent[i] != i:
+            self.parent[i] = self.find(self.parent[i])
+        return self.parent[i]
+    
+    def union(self, x, y):
+        rootx = self.find(x)
+        rooty = self.find(y)
+        if rootx != rooty:
+            if self.rank[rootx] < self.rank[rooty]:
+                rootx, rooty = rooty, rootx
+            self.parent[rooty] = rootx
+            if self.rank[rootx] == self.rank[rooty]:
+                self.rank[rootx] += 1
+            self.count -= 1
+    
+    def getCount(self):
+        return self.count
+
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        nr = len(grid)
+        if nr == 0:
+            return 0
+        nc = len(grid[0])
+
+        uf = UnionFind(grid)
+        num_islands = 0
+        for r in range(nr):
+            for c in range(nc):
+                if grid[r][c] == "1":
+                    grid[r][c] = "0"
+                    for x, y in [(r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)]:
+                        if 0 <= x < nr and 0 <= y < nc and grid[x][y] == "1":
+                            uf.union(r * nc + c, x * nc + y)
+        
+        return uf.getCount()
+```
+
+**复杂度分析**
+
+* 时间复杂度：$O(MN \times \alpha(MN))$，其中 $M$ 和 $N$ 分别为行数和列数。注意当使用路径压缩（见 `find` 函数）和按秩合并（见数组 `rank`）实现并查集时，单次操作的时间复杂度为 $\alpha(MN)$，其中 $\alpha(x)$ 为反阿克曼函数，当自变量 $x$ 的值在人类可观测的范围内（宇宙中粒子的数量）时，函数 $\alpha(x)$ 的值不会超过 $5$，因此也可以看成是常数时间复杂度。
+
+* 空间复杂度：$O(MN)$，这是并查集需要使用的空间。
+

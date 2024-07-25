@@ -2,10 +2,9 @@ package numberOfIslands
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func numIslands(grid [][]byte) int {
-	ans := 0
+	res := 0
 	nr := len(grid)
 	nc := len(grid[0])
-
 	var dfs func(r, c int)
 	dfs = func(r, c int) {
 		grid[r][c] = '0'
@@ -27,11 +26,12 @@ func numIslands(grid [][]byte) int {
 		for c := 0; c < nc; c++ {
 			if grid[r][c] == '1' {
 				dfs(r, c)
-				ans++
+				res++
 			}
 		}
 	}
-	return ans
+
+	return res
 
 }
 

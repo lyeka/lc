@@ -20,30 +20,28 @@ func levelOrder(root *TreeNode) [][]int {
 		return nil
 	}
 
-	res := make([][]int, 0)
-	l := []*TreeNode{root}
+	ans := make([][]int, 0)
+	stack := []*TreeNode{root}
 
-	for len(l) > 0 {
-		valList := make([]int, 0)
-		size := len(l)
+	for len(stack) > 0 {
+		size := len(stack)
+		vals := make([]int, 0)
 		for size > 0 {
-			node := l[0]
-			l = l[1:]
-			valList = append(valList, node.Val)
-			if node.Left != nil {
-				l = append(l, node.Left)
+			p := stack[0]
+			stack = stack[1:]
+			vals = append(vals, p.Val)
+			if p.Left != nil {
+				stack = append(stack, p.Left)
 			}
-			if node.Right != nil {
-				l = append(l, node.Right)
+			if p.Right != nil {
+				stack = append(stack, p.Right)
 			}
 			size--
 		}
-		res = append(res, valList)
-
+		ans = append(ans, vals)
 	}
 
-	return res
-
+	return ans
 }
 
 //leetcode submit region end(Prohibit modification and deletion)

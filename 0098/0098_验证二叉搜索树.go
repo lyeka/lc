@@ -1,9 +1,5 @@
 package validateBinarySearchTree
 
-import (
-	"math"
-)
-
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode
@@ -20,25 +16,23 @@ type TreeNode struct {
  * }
  */
 func isValidBST(root *TreeNode) bool {
-	stack := make([]*TreeNode, 0)
-	pre := math.MinInt
-	for root != nil || len(stack) > 0 {
-		for root != nil {
-			stack = append(stack, root)
-			root = root.Left
-		}
-		node := stack[len(stack)-1]
-		stack = stack[:len(stack)-1]
-		if node.Val <= pre {
-			return false
-		}
-		pre = node.Val
-		root = node.Right
+	return helper(root, nil, nil)
+}
 
+func helper(node *TreeNode, lower *int, upper *int) bool {
+	if node == nil {
+		return true
 	}
 
-	return true
+	if lower != nil && node.Val <= *lower {
+		return false
+	}
 
+	if upper != nil && node.Val >= *upper {
+		return false
+	}
+
+	return helper(node.Left, lower, &node.Val) && helper(node.Right, &node.Val, upper)
 }
 
 //leetcode submit region end(Prohibit modification and deletion)
